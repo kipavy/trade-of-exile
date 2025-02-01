@@ -1,4 +1,3 @@
-import * as React from "react"
 import { NavLink } from 'react-router-dom'
 import { Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -12,19 +11,10 @@ import { useTheme } from "@/hooks/useTheme"
 
 export function Navbar() {
   const { theme, setTheme } = useTheme()
-  const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 })
 
-  const handleThemeToggle = (event: React.MouseEvent) => {
-    setMousePosition({ x: event.clientX, y: event.clientY })
+  const handleThemeToggle = () => {
     setTheme(theme === "light" ? "dark" : "light")
   }
-
-  React.useEffect(() => {
-    const root = document.documentElement
-    root.style.setProperty("--x", `${mousePosition.x}px`)
-    root.style.setProperty("--y", `${mousePosition.y}px`)
-  }, [mousePosition])
-
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
@@ -32,7 +22,11 @@ export function Navbar() {
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavLink className={navigationMenuTriggerStyle()} to="/">
-                Home
+                <img
+                  src={theme === "light" ? "logo-dark.png" : "logo-light.png"}
+                  alt="Logo"
+                  className="navbar__logo max-w-[6rem] max-h-6rem]"
+                />
               </NavLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
