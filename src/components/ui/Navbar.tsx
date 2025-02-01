@@ -1,10 +1,10 @@
 import * as React from "react"
+import { NavLink } from 'react-router-dom'
 import { Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
@@ -31,19 +31,19 @@ export function Navbar() {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/">
+              <NavLink className={navigationMenuTriggerStyle()} to="/">
                 Home
-              </NavigationMenuLink>
+              </NavLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/about">
+              <NavLink className={navigationMenuTriggerStyle()} to="/about">
                 About
-              </NavigationMenuLink>
+              </NavLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/contact">
+              <NavLink className={navigationMenuTriggerStyle()} to="/contact">
                 Contact
-              </NavigationMenuLink>
+              </NavLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
@@ -58,4 +58,3 @@ export function Navbar() {
     </header>
   )
 }
-
