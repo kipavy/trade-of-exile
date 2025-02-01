@@ -1,3 +1,6 @@
+docker compose --profile dev up
+docker compose --profile prod up
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
