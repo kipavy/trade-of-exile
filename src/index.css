@@ -42,6 +42,20 @@
   --color-chart-3: hsl(var(--chart-3));
   --color-chart-4: hsl(var(--chart-4));
   --color-chart-5: hsl(var(--chart-5));
+
+  @keyframes shine {
+    0% {
+      background-position: 200% 0;
+    }
+    25% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  --shine: shine 3s ease-out infinite;
 }
 
 /*
@@ -89,7 +103,7 @@
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 223, 85%, 13%;
     --card-foreground: 210 40% 98%;
 
     --popover: 222.2 84% 4.9%;
@@ -110,9 +124,10 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
+    --border: 217.3, 43.1%, 53.1%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
   }
 }
 
@@ -174,4 +189,10 @@ body::before {
 .dark body::before,
 body.theme-changing::before {
   opacity: 1;
+}
+
+@layer utilities {
+  .bg-transparent {
+    background-color: hsla(0, 0%, 100%, 0.1);
+  }
 }

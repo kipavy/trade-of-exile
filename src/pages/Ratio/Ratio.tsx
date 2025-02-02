@@ -2,7 +2,7 @@ import RatioCalculator from "@/components/ui/RatioCalculator"
 
 export default function Ratio() {
   return (
-    <div>
+    <div className="flex justify-center items-center">
       <RatioCalculator />
     </div>
   )
