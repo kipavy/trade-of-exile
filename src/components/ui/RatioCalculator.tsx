@@ -1,16 +1,19 @@
-import { useState } from 'react'
 import { ArrowUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import RatioInput from '@/components/ui/RatioInput'
 import useProfitCalculator from '@/hooks/useProfitCalculator'
+import useLocalStorageState from '@/hooks/useLocalStorageState';
 
 export default function RatioCalculator() {
-  const [buyAmount1, setBuyAmount1] = useState<number | string>(() => localStorage.getItem("buyAmount1") || "")
-  const [buyAmount2, setBuyAmount2] = useState<number | string>(() => localStorage.getItem("buyAmount2") || "")
-  const [sellAmount1, setSellAmount1] = useState<number | string>(() => localStorage.getItem("sellAmount1") || "")
-  const [sellAmount2, setSellAmount2] = useState<number | string>(() => localStorage.getItem("sellAmount2") || "")
-  const profit = useProfitCalculator(buyAmount1, buyAmount2, sellAmount1, sellAmount2)
+  const [buyAmount1, setBuyAmount1] = useLocalStorageState("buyAmount1", "");
+  const [buyAmount2, setBuyAmount2] = useLocalStorageState("buyAmount2", "");
+  const [sellAmount1, setSellAmount1] = useLocalStorageState("sellAmount1", "");
+  const [sellAmount2, setSellAmount2] = useLocalStorageState("sellAmount2", "");
+  const profit = useProfitCalculator(
+    { amount1: buyAmount1, amount2: buyAmount2 },
+    { amount1: sellAmount1, amount2: sellAmount2 }
+  )
 
   const invertRatios = (type: 'buy' | 'sell') => {
     if (type === 'buy') {
@@ -53,18 +56,18 @@ export default function RatioCalculator() {
           <div className="space-y-4 flex-1">
             <RatioInput
               label="Buying Ratio"
-              amount1={buyAmount1}
-              setAmount1={setBuyAmount1}
-              amount2={buyAmount2}
-              setAmount2={setBuyAmount2}
+              amount1={Number(buyAmount1)}
+              setAmount1={(value) => setBuyAmount1(value)}
+              amount2={Number(buyAmount2)}
+              setAmount2={(value) => setBuyAmount2(value)}
               invertRatios={() => invertRatios('buy')}
             />
             <RatioInput
               label="Selling Ratio"
-              amount1={sellAmount1}
-              setAmount1={setSellAmount1}
-              amount2={sellAmount2}
-              setAmount2={setSellAmount2}
+              amount1={Number(sellAmount1)}
+              setAmount1={(value) => setSellAmount1(value)}
+              amount2={Number(sellAmount2)}
+              setAmount2={(value) => setSellAmount2(value)}
               invertRatios={() => invertRatios('sell')}
             />
           </div>
