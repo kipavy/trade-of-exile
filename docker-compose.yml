@@ -1,6 +1,7 @@
 services:
   dev:
     image: node:alpine
+    restart: always
     working_dir: /app
     network_mode: host
     volumes:
