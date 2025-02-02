@@ -1,4 +1,4 @@
-# https://vite.dev/guide/static-deploy
+# https://vite.dev/guide/static-deploy/
 name: Deploy static content to Pages
 
 on:
