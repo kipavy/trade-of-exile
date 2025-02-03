@@ -19,11 +19,11 @@ export default function RatioCalculator({ setProfit }: { setProfit: (profit: num
 
   const invertRatios = (type: 'buy' | 'sell') => {
     if (type === 'buy') {
-      setBuyAmount1(buyAmount2)
-      setBuyAmount2(buyAmount1)
+      setBuyAmount1(buyAmount2.toString())
+      setBuyAmount2(buyAmount1.toString())
     } else {
-      setSellAmount1(sellAmount2)
-      setSellAmount2(sellAmount1)
+      setSellAmount1(sellAmount2.toString())
+      setSellAmount2(sellAmount1.toString())
     }
   }
 
@@ -68,18 +68,18 @@ export default function RatioCalculator({ setProfit }: { setProfit: (profit: num
           <div className="space-y-4 flex-1">
             <RatioInput
               label="Buying Ratio"
-              amount1={buyAmount1}
-              setAmount1={(value) => setBuyAmount1(value)}
-              amount2={buyAmount2}
-              setAmount2={(value) => setBuyAmount2(value)}
+              amount1={Number(buyAmount1)}
+              setAmount1={(value) => setBuyAmount1(value.toString())}
+              amount2={Number(buyAmount2)}
+              setAmount2={(value) => setBuyAmount2(value.toString())}
               invertRatios={() => invertRatios('buy')}
             />
             <RatioInput
               label="Selling Ratio"
-              amount1={sellAmount1}
-              setAmount1={(value) => setSellAmount1(value)}
-              amount2={sellAmount2}
-              setAmount2={(value) => setSellAmount2(value)}
+              amount1={Number(sellAmount1)}
+              setAmount1={(value) => setSellAmount1(value.toString())}
+              amount2={Number(sellAmount2)}
+              setAmount2={(value) => setSellAmount2(value.toString())}
               invertRatios={() => invertRatios('sell')}
               placeholder1="Have"
               placeholder2="Want"

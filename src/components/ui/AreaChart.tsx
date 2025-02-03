@@ -1,10 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { TrendingUp } from "lucide-react"
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from "recharts"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -50,7 +49,7 @@ export default function AreaChartComponent({ computedInterestRate }: { computedI
             <Checkbox
               id="showLinearGrowth"
               checked={showLinearGrowth}
-              onCheckedChange={(checked) => setShowLinearGrowth(checked)}
+              onCheckedChange={(checked) => setShowLinearGrowth(checked === true)}
             />
           </div>
             <div className="col-span-3 flex items-center">
@@ -58,7 +57,7 @@ export default function AreaChartComponent({ computedInterestRate }: { computedI
               <Checkbox
                 id="useComputedInterest"
                 checked={useComputedInterest}
-                onCheckedChange={(checked) => setUseComputedInterest(checked)}
+                onCheckedChange={(checked) => setUseComputedInterest(checked === true)}
               />
           </div>
           <div>
