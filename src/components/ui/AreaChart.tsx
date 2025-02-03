@@ -10,15 +10,18 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"
 import { type ChartConfig } from "@/types/chart"
 import { useCalculateGrowth } from "@/hooks/useCalculateGrowth"
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores/store';
 
-export default function AreaChartComponent({ computedInterestRate }: { computedInterestRate: number }) {
+export default function AreaChartComponent() {
+  const profit = useSelector((state: RootState) => state.trade.profit) ?? 0;
   const [initialInvestment, setInitialInvestment] = useState<number>(10000)
   const [manualInterestRate, setManualInterestRate] = useState<number>(5)
   const [iterations, setIterations] = useState<number>(10)
   const [showLinearGrowth, setShowLinearGrowth] = useState<boolean>(true)
   const [useComputedInterest, setUseComputedInterest] = useState<boolean>(true)
 
-  const interestRate = useComputedInterest ? computedInterestRate : manualInterestRate
+  const interestRate = useComputedInterest ? profit : manualInterestRate
   const chartData = useCalculateGrowth(initialInvestment, interestRate, iterations)
 
   const chartConfig: ChartConfig = {

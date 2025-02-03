@@ -1,47 +1,50 @@
+import { useEffect } from 'react'
 import { ArrowUpDown, RotateCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import RatioInput from '@/components/ui/RatioInput'
-import useProfitCalculator from '@/hooks/useProfitCalculator'
-import useLocalStorage from '@/hooks/useLocalStorage';
+import { calculateProfit } from '@/utils/calculateProfit';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/stores/store';
+import { setBuyAmount1, setBuyAmount2, setSellAmount1, setSellAmount2, setProfit } from '@/stores/slices/tradeSlice';
 
-export default function RatioCalculator({ setProfit }: { setProfit: (profit: number | null) => void }) {
-  const [buyAmount1, setBuyAmount1] = useLocalStorage("buyAmount1", "");
-  const [buyAmount2, setBuyAmount2] = useLocalStorage("buyAmount2", "");
-  const [sellAmount1, setSellAmount1] = useLocalStorage("sellAmount1", "");
-  const [sellAmount2, setSellAmount2] = useLocalStorage("sellAmount2", "");
-  const profit = useProfitCalculator(
-    { amount1: buyAmount1, amount2: buyAmount2 },
-    { amount1: sellAmount1, amount2: sellAmount2 }
-  )
+export default function RatioCalculator() {
+  const dispatch = useDispatch();
+  const { buyAmount1, buyAmount2, sellAmount1, sellAmount2, profit } = useSelector((state: RootState) => state.trade);
 
-  setProfit(profit)
+  useEffect(() => {
+    const profit = calculateProfit(
+      { amount1: buyAmount1, amount2: buyAmount2 },
+      { amount1: sellAmount1, amount2: sellAmount2 }
+    );
+    dispatch(setProfit(profit));
+  }, [buyAmount1, buyAmount2, sellAmount1, sellAmount2]);
 
   const invertRatios = (type: 'buy' | 'sell') => {
     if (type === 'buy') {
-      setBuyAmount1(buyAmount2.toString())
-      setBuyAmount2(buyAmount1.toString())
+      dispatch(setBuyAmount1(buyAmount2.toString()));
+      dispatch(setBuyAmount2(buyAmount1.toString()));
     } else {
-      setSellAmount1(sellAmount2.toString())
-      setSellAmount2(sellAmount1.toString())
+      dispatch(setSellAmount1(sellAmount2.toString()));
+      dispatch(setSellAmount2(sellAmount1.toString()));
     }
-  }
+  };
 
   const swapAmounts = () => {
-    const tempBuyAmount1 = buyAmount1
-    const tempBuyAmount2 = buyAmount2
-    setBuyAmount1(sellAmount1)
-    setBuyAmount2(sellAmount2)
-    setSellAmount1(tempBuyAmount1)
-    setSellAmount2(tempBuyAmount2)
-  }
+    const tempBuyAmount1 = buyAmount1;
+    const tempBuyAmount2 = buyAmount2;
+    dispatch(setBuyAmount1(sellAmount1));
+    dispatch(setBuyAmount2(sellAmount2));
+    dispatch(setSellAmount1(tempBuyAmount1));
+    dispatch(setSellAmount2(tempBuyAmount2));
+  };
 
   const resetAmounts = () => {
-    setBuyAmount1("")
-    setBuyAmount2("")
-    setSellAmount1("")
-    setSellAmount2("")
-  }
+    dispatch(setBuyAmount1(''));
+    dispatch(setBuyAmount2(''));
+    dispatch(setSellAmount1(''));
+    dispatch(setSellAmount2(''));
+  };
 
   const getProfitColor = (profit: number | null) => {
     if (profit === null) return "text-white"
@@ -66,20 +69,20 @@ export default function RatioCalculator({ setProfit }: { setProfit: (profit: num
             </Button>
           </div>
           <div className="space-y-4 flex-1">
-            <RatioInput
+          <RatioInput
               label="Buying Ratio"
               amount1={Number(buyAmount1)}
-              setAmount1={(value) => setBuyAmount1(value.toString())}
+              setAmount1={(value) => dispatch(setBuyAmount1(value.toString()))}
               amount2={Number(buyAmount2)}
-              setAmount2={(value) => setBuyAmount2(value.toString())}
+              setAmount2={(value) => dispatch(setBuyAmount2(value.toString()))}
               invertRatios={() => invertRatios('buy')}
             />
             <RatioInput
               label="Selling Ratio"
               amount1={Number(sellAmount1)}
-              setAmount1={(value) => setSellAmount1(value.toString())}
+              setAmount1={(value) => dispatch(setSellAmount1(value.toString()))}
               amount2={Number(sellAmount2)}
-              setAmount2={(value) => setSellAmount2(value.toString())}
+              setAmount2={(value) => dispatch(setSellAmount2(value.toString()))}
               invertRatios={() => invertRatios('sell')}
               placeholder1="Have"
               placeholder2="Want"
