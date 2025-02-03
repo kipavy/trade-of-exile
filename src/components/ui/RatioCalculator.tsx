@@ -1,5 +1,4 @@
-import { useEffect } from 'react'
-import { ArrowUpDown, RotateCcw } from 'lucide-react'
+import { ArrowUpDown, RotateCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import RatioInput from '@/components/ui/RatioInput'
@@ -63,7 +62,7 @@ export default function RatioCalculator({ setProfit }: { setProfit: (profit: num
               <ArrowUpDown className="w-6 h-6 transition-transform duration-300 group-hover:rotate-180" />
             </Button>
             <Button onClick={resetAmounts} className="group">
-              <RotateCcw className="w-6 h-6 transition-transform duration-300 group-hover:rotate-180" />
+              <RotateCw className="w-6 h-6 transition-transform duration-300 group-hover:rotate-180" />
             </Button>
           </div>
           <div className="space-y-4 flex-1">

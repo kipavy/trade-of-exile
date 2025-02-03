@@ -1,5 +1,5 @@
 import RatioCalculator from "@/components/ui/RatioCalculator"
-import AreaChartComponent from "@/components/ui/AreaChart"
+import AreaChart from "@/components/ui/AreaChart"
 import { useProfit } from "@/hooks/useProfit"
 
 export default function Home() {
@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="flex flex-col justify-center items-center">
       <RatioCalculator setProfit={setProfit} />
-      <AreaChartComponent computedInterestRate={profit ?? 0} />
+      <AreaChart computedInterestRate={profit ?? 0} />
     </div>
   )
 }

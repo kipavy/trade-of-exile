@@ -101,7 +101,7 @@ export default function AreaChartComponent({ computedInterestRate }: { computedI
                 axisLine={false}
                 tickMargin={8}
               />
-              <ChartTooltip content={<ChartTooltipContent />} />
+              <ChartTooltip content={<ChartTooltipContent hideLabel hideIndicator/>} />
               <defs>
               <linearGradient id="fillinitialInvestment" x1="0" y1="0" x2="0" y2="1">
                 <stop
