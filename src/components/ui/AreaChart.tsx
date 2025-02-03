@@ -12,11 +12,14 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLe
 import { type ChartConfig } from "@/types/chart"
 import { useCalculateGrowth } from "@/hooks/useCalculateGrowth"
 
-export default function AreaChartComponent() {
-  const [initialInvestment, setInitialInvestment] = useState<number | undefined>(10000)
-  const [interestRate, setInterestRate] = useState<number | undefined>(5)
+export default function AreaChartComponent({ computedInterestRate }: { computedInterestRate: number }) {
+  const [initialInvestment, setInitialInvestment] = useState<number>(10000)
+  const [manualInterestRate, setManualInterestRate] = useState<number>(5)
   const [iterations, setIterations] = useState<number>(10)
   const [showLinearGrowth, setShowLinearGrowth] = useState<boolean>(true)
+  const [useComputedInterest, setUseComputedInterest] = useState<boolean>(true)
+
+  const interestRate = useComputedInterest ? computedInterestRate : manualInterestRate
   const chartData = useCalculateGrowth(initialInvestment, interestRate, iterations)
 
   const chartConfig: ChartConfig = {
@@ -25,7 +28,7 @@ export default function AreaChartComponent() {
       color: "hsl(var(--chart-5))",
     },
     withInterest: {
-      label: `With ${interestRate}% Interest`,
+      label: `With ${interestRate.toFixed(2)}% Interest`,
       color: "hsl(var(--chart-1))",
     },
     linearGrowth: {
@@ -38,7 +41,7 @@ export default function AreaChartComponent() {
     <Card className="w-full">
       <CardHeader>
         <CardTitle>Investment Growth</CardTitle>
-        {/* <CardDescription>Comparing initial investment vs compound interest growth over {iterations} iterations</CardDescription> */}
+        <CardDescription>Comparing initial investment vs compound interest growth over {iterations} iterations</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-3 gap-4 mb-6">
@@ -55,8 +58,16 @@ export default function AreaChartComponent() {
             <Input
               id="initialInvestment"
               type="number"
-              value={initialInvestment !== undefined ? initialInvestment : ''}
-              onChange={(e) => setInitialInvestment(e.target.value ? Number(e.target.value) : undefined)}
+              value={initialInvestment}
+              onChange={(e) => setInitialInvestment(Number(e.target.value))}
+            />
+          </div>
+          <div className="col-span-3 flex items-center">
+            <Label htmlFor="useComputedInterest" className="mr-2">Use Computed Interest</Label>
+            <Checkbox
+              id="useComputedInterest"
+              checked={useComputedInterest}
+              onCheckedChange={(checked) => setUseComputedInterest(checked)}
             />
           </div>
           <div>
@@ -64,8 +75,9 @@ export default function AreaChartComponent() {
             <Input
               id="interestRate"
               type="number"
-              value={interestRate !== undefined ? interestRate : ''}
-              onChange={(e) => setInterestRate(e.target.value ? Number(e.target.value) : undefined)}
+              value={interestRate.toFixed(2)}
+              onChange={(e) => setManualInterestRate(Number(e.target.value))}
+              disabled={useComputedInterest}
             />
           </div>
           <div>
@@ -95,7 +107,7 @@ export default function AreaChartComponent() {
                 <stop
                   offset="5%"
                   stopColor="var(--color-initialInvestment)"
-                  stopOpacity={0.8}
+                  stopOpacity={0.5}
                 />
                 <stop
                   offset="95%"
@@ -107,7 +119,7 @@ export default function AreaChartComponent() {
                 <stop
                   offset="5%"
                   stopColor="var(--color-withInterest)"
-                  stopOpacity={0.8}
+                  stopOpacity={0.5}
                 />
                 <stop
                   offset="95%"
@@ -119,7 +131,7 @@ export default function AreaChartComponent() {
                 <stop
                   offset="5%"
                   stopColor="var(--color-linearGrowth)"
-                  stopOpacity={0.8}
+                  stopOpacity={0.5}
                 />
                 <stop
                   offset="95%"
@@ -140,7 +152,7 @@ export default function AreaChartComponent() {
               <Area
                 type="monotone"
                 dataKey="withInterest"
-                name={`With ${interestRate}% Interest`}
+                name={`With ${interestRate.toFixed(2)}% Interest`}
                 stroke="var(--color-withInterest)"
                 fill="url(#fillWithInterest)"
                 fillOpacity={0.5}

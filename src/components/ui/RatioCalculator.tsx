@@ -1,19 +1,22 @@
-import { ArrowUpDown } from 'lucide-react'
+import { useEffect } from 'react'
+import { ArrowUpDown, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import RatioInput from '@/components/ui/RatioInput'
 import useProfitCalculator from '@/hooks/useProfitCalculator'
-import useLocalStorageState from '@/hooks/useLocalStorageState';
+import useLocalStorage from '@/hooks/useLocalStorage';
 
-export default function RatioCalculator() {
-  const [buyAmount1, setBuyAmount1] = useLocalStorageState("buyAmount1", "");
-  const [buyAmount2, setBuyAmount2] = useLocalStorageState("buyAmount2", "");
-  const [sellAmount1, setSellAmount1] = useLocalStorageState("sellAmount1", "");
-  const [sellAmount2, setSellAmount2] = useLocalStorageState("sellAmount2", "");
+export default function RatioCalculator({ setProfit }: { setProfit: (profit: number | null) => void }) {
+  const [buyAmount1, setBuyAmount1] = useLocalStorage("buyAmount1", "");
+  const [buyAmount2, setBuyAmount2] = useLocalStorage("buyAmount2", "");
+  const [sellAmount1, setSellAmount1] = useLocalStorage("sellAmount1", "");
+  const [sellAmount2, setSellAmount2] = useLocalStorage("sellAmount2", "");
   const profit = useProfitCalculator(
     { amount1: buyAmount1, amount2: buyAmount2 },
     { amount1: sellAmount1, amount2: sellAmount2 }
   )
+
+  setProfit(profit)
 
   const invertRatios = (type: 'buy' | 'sell') => {
     if (type === 'buy') {
@@ -34,6 +37,13 @@ export default function RatioCalculator() {
     setSellAmount2(tempBuyAmount2)
   }
 
+  const resetAmounts = () => {
+    setBuyAmount1("")
+    setBuyAmount2("")
+    setSellAmount1("")
+    setSellAmount2("")
+  }
+
   const getProfitColor = (profit: number | null) => {
     if (profit === null) return "text-white"
     if (profit > 0) return "text-green-500"
@@ -48,27 +58,32 @@ export default function RatioCalculator() {
       </CardHeader>
       <CardContent>
         <div className="flex items-center space-x-4">
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-center space-y-2">
             <Button onClick={swapAmounts} className="group">
               <ArrowUpDown className="w-6 h-6 transition-transform duration-300 group-hover:rotate-180" />
+            </Button>
+            <Button onClick={resetAmounts} className="group">
+              <RotateCcw className="w-6 h-6 transition-transform duration-300 group-hover:rotate-180" />
             </Button>
           </div>
           <div className="space-y-4 flex-1">
             <RatioInput
               label="Buying Ratio"
-              amount1={Number(buyAmount1)}
-              setAmount1={(value) => setBuyAmount1(value ?? "")}
-              amount2={Number(buyAmount2)}
-              setAmount2={(value) => setBuyAmount2(value ?? "")}
+              amount1={buyAmount1}
+              setAmount1={(value) => setBuyAmount1(value)}
+              amount2={buyAmount2}
+              setAmount2={(value) => setBuyAmount2(value)}
               invertRatios={() => invertRatios('buy')}
             />
             <RatioInput
               label="Selling Ratio"
-              amount1={Number(sellAmount1)}
-              setAmount1={(value) => setSellAmount1(value ?? "")}
-              amount2={Number(sellAmount2)}
-              setAmount2={(value) => setSellAmount2(value ?? "")}
+              amount1={sellAmount1}
+              setAmount1={(value) => setSellAmount1(value)}
+              amount2={sellAmount2}
+              setAmount2={(value) => setSellAmount2(value)}
               invertRatios={() => invertRatios('sell')}
+              placeholder1="Have"
+              placeholder2="Want"
             />
           </div>
         </div>
