@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { Navbar } from "@/components/ui/Navbar"
-import { Home, Ratio } from '@/pages'
+import { Home, About } from '@/pages'
 
 export default function App() {
   return (
@@ -9,7 +9,7 @@ export default function App() {
       <main className="container mx-auto mt-8">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/ratio" element={<Ratio />} />
+          <Route path="/about" element={<About />} />
         </Routes>
       </main>
     </div>

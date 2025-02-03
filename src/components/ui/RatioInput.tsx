@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label"
 import { ArrowRightLeft } from "lucide-react";
 
 interface RatioInputProps {
@@ -14,14 +15,15 @@ interface RatioInputProps {
 export default function RatioInput({ label, amount1, setAmount1, amount2, setAmount2, invertRatios }: RatioInputProps) {
     return (
       <div>
-        <label className="block text-sm font-medium text-foreground">
+        <Label htmlFor={label}>
           {label}
-        </label>
+        </Label>
         <div className="flex items-center space-x-2">
           <Input
             type="number"
             value={amount1 !== undefined ? amount1 : ''}
             onChange={(e) => setAmount1(e.target.value ? Number(e.target.value) : undefined)}
+            placeholder="Want"
             className="max-w-3xs mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
           <span>:</span>
@@ -29,6 +31,7 @@ export default function RatioInput({ label, amount1, setAmount1, amount2, setAmo
             type="number"
             value={amount2 !== undefined ? amount2 : ''}
             onChange={(e) => setAmount2(e.target.value ? Number(e.target.value) : undefined)}
+            placeholder="Have"
             className="max-w-3xs mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
           <Button onClick={invertRatios} className="ml-2 group" effect="shineHover">

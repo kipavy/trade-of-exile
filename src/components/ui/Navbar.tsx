@@ -30,8 +30,8 @@ export function Navbar() {
           </NavLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavLink className={navigationMenuTriggerStyle()} to="/ratio">
-            Ratio
+          <NavLink className={navigationMenuTriggerStyle()} to="/about">
+            About
           </NavLink>
         </NavigationMenuItem>
       </NavigationMenuList>

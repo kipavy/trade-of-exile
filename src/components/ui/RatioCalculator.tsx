@@ -57,17 +57,17 @@ export default function RatioCalculator() {
             <RatioInput
               label="Buying Ratio"
               amount1={Number(buyAmount1)}
-              setAmount1={(value) => setBuyAmount1(value)}
+              setAmount1={(value) => setBuyAmount1(value ?? "")}
               amount2={Number(buyAmount2)}
-              setAmount2={(value) => setBuyAmount2(value)}
+              setAmount2={(value) => setBuyAmount2(value ?? "")}
               invertRatios={() => invertRatios('buy')}
             />
             <RatioInput
               label="Selling Ratio"
               amount1={Number(sellAmount1)}
-              setAmount1={(value) => setSellAmount1(value)}
+              setAmount1={(value) => setSellAmount1(value ?? "")}
               amount2={Number(sellAmount2)}
-              setAmount2={(value) => setSellAmount2(value)}
+              setAmount2={(value) => setSellAmount2(value ?? "")}
               invertRatios={() => invertRatios('sell')}
             />
           </div>
