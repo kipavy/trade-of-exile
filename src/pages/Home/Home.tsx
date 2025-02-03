@@ -6,7 +6,7 @@ export default function Home() {
   const { profit, setProfit } = useProfit()
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center gap-5">
       <RatioCalculator setProfit={setProfit} />
       <AreaChart computedInterestRate={profit ?? 0} />
     </div>

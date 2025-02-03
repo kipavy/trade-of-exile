@@ -38,10 +38,10 @@ export default function AreaChartComponent({ computedInterestRate }: { computedI
   }
 
   return (
-    <Card className="w-full">
+    <Card>
       <CardHeader>
         <CardTitle>Investment Growth</CardTitle>
-        <CardDescription>Comparing initial investment vs compound interest growth over {iterations} iterations</CardDescription>
+        {/* <CardDescription>Comparing initial investment vs compound interest growth over {iterations} iterations</CardDescription> */}
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-3 gap-4 mb-6">
@@ -53,6 +53,14 @@ export default function AreaChartComponent({ computedInterestRate }: { computedI
               onCheckedChange={(checked) => setShowLinearGrowth(checked)}
             />
           </div>
+            <div className="col-span-3 flex items-center">
+              <Label htmlFor="useComputedInterest" className="mr-2">Use Computed Interest</Label>
+              <Checkbox
+                id="useComputedInterest"
+                checked={useComputedInterest}
+                onCheckedChange={(checked) => setUseComputedInterest(checked)}
+              />
+          </div>
           <div>
             <Label htmlFor="initialInvestment">Initial Investment</Label>
             <Input
@@ -60,14 +68,6 @@ export default function AreaChartComponent({ computedInterestRate }: { computedI
               type="number"
               value={initialInvestment}
               onChange={(e) => setInitialInvestment(Number(e.target.value))}
-            />
-          </div>
-          <div className="col-span-3 flex items-center">
-            <Label htmlFor="useComputedInterest" className="mr-2">Use Computed Interest</Label>
-            <Checkbox
-              id="useComputedInterest"
-              checked={useComputedInterest}
-              onCheckedChange={(checked) => setUseComputedInterest(checked)}
             />
           </div>
           <div>
@@ -101,7 +101,7 @@ export default function AreaChartComponent({ computedInterestRate }: { computedI
                 axisLine={false}
                 tickMargin={8}
               />
-              <ChartTooltip content={<ChartTooltipContent hideLabel hideIndicator/>} />
+              <ChartTooltip content={<ChartTooltipContent hideLabel/>} />
               <defs>
               <linearGradient id="fillinitialInvestment" x1="0" y1="0" x2="0" y2="1">
                 <stop
