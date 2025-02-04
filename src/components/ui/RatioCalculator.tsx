@@ -93,7 +93,7 @@ export default function RatioCalculator() {
       <CardFooter>
         {profit !== null && (
           <div className="mt-4 text-lg font-bold">
-            Profit: <span className={getProfitColor(profit)}>{profit > 0 ? "+" : ""}{profit.toFixed(2)}%</span>
+            Profit: <span className={getProfitColor(profit)}>{profit > 0 ? "+" : ""}{(profit*100).toFixed(2)}%</span>
           </div>
         )}
       </CardFooter>

@@ -2,8 +2,8 @@ import { useState, useEffect } from "react"
 
 const calculateGrowth = (principal: number, rate: number, iterations: number) => {
   return Array.from({ length: iterations + 1 }, (_, index) => {
-    const withInterest = principal * Math.pow(1 + rate / 100, index)
-    const linearGrowth = principal + (principal * rate / 100) * index
+    const withInterest = principal * Math.pow(1 + rate, index)
+    const linearGrowth = principal + (principal * rate) * index
     return {
       iteration: index,
       initialInvestment: principal,

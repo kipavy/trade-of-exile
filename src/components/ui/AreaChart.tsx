@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from "recharts"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -12,17 +12,19 @@ import { type ChartConfig } from "@/types/chart"
 import { useCalculateGrowth } from "@/hooks/useCalculateGrowth"
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores/store';
-
+import { TrendingUp, ArrowDownRight, ArrowUpRight, RectangleEllipsis } from "lucide-react"
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
 export default function AreaChartComponent() {
-  const profit = useSelector((state: RootState) => state.trade.profit) ?? 0;
+  const { buyAmount1, buyAmount2, profit } = useSelector((state: RootState) => state.trade);
+  const defaultProfit = profit ?? 0;
   const [initialInvestment, setInitialInvestment] = useState<number>(10000)
   const [manualInterestRate, setManualInterestRate] = useState<number>(5)
   const [iterations, setIterations] = useState<number>(10)
   const [showLinearGrowth, setShowLinearGrowth] = useState<boolean>(true)
   const [useComputedInterest, setUseComputedInterest] = useState<boolean>(true)
 
-  const interestRate = useComputedInterest ? profit : manualInterestRate
-  const chartData = useCalculateGrowth(initialInvestment, interestRate, iterations)
+  const interestRate = useComputedInterest ? defaultProfit*100 : manualInterestRate
+  const chartData = useCalculateGrowth(initialInvestment, interestRate/100, iterations)
 
   const chartConfig: ChartConfig = {
     initialInvestment: {
@@ -31,7 +33,7 @@ export default function AreaChartComponent() {
     },
     withInterest: {
       label: `With ${interestRate.toFixed(2)}% Interest`,
-      color: "hsl(var(--chart-1))",
+      color: "hsl(var(--chart-2))",
     },
     linearGrowth: {
       label: "Linear Growth",
@@ -39,14 +41,46 @@ export default function AreaChartComponent() {
     },
   }
 
+  const buyValue = (Number(buyAmount1) / Number(buyAmount2)) * initialInvestment;
+  const sellValue = (initialInvestment + (initialInvestment * interestRate/100)).toFixed(2);
+
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Investment Growth</CardTitle>
-        {/* <CardDescription>Comparing initial investment vs compound interest growth over {iterations} iterations</CardDescription> */}
+      <CardHeader className="pb-4">
+        <CardTitle>
+          Investment Growth <TrendingUp className="inline-block h-5 w-5" />
+        </CardTitle>
+        <CardDescription className="flex flex-col">
+          <span>
+            <span className="text-green-500">Buying</span> {buyValue.toFixed(2)} currency for {initialInvestment} ex
+          </span>
+          <span>
+            <span className="text-red-500">Selling</span> {buyValue.toFixed(2)} currency for {sellValue} ex
+          </span>
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger>
+                <RectangleEllipsis className="hover:stroke-primary"/>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" align="start" className="bg-primary">
+                <div>
+                  {chartData.slice(1,-1).map((data, index) => (
+                    <div key={index} className="flex items-center gap-1">
+                      <span>{index + 2}:</span>
+                      <ArrowUpRight className="h-4 w-4 text-green-500" />
+                      <span>{data.withInterest.toFixed(2)}</span>
+                      <ArrowDownRight className="h-4 w-4 text-red-500" />
+                      <span>{(data.withInterest + data.withInterest * interestRate / 100).toFixed()} ex</span>
+                    </div>
+                  ))}
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-3 gap-2 mb-6">
           <div className="col-span-3 flex items-center">
             <Label htmlFor="showLinearGrowth" className="mr-2">Linear Growth</Label>
             <Checkbox
@@ -77,7 +111,7 @@ export default function AreaChartComponent() {
             <Input
               id="interestRate"
               type="number"
-              value={interestRate.toFixed(2)}
+              value={(interestRate).toFixed(2)}
               onChange={(e) => setManualInterestRate(Number(e.target.value))}
               disabled={useComputedInterest}
             />
@@ -103,7 +137,7 @@ export default function AreaChartComponent() {
                 axisLine={false}
                 tickMargin={8}
               />
-              <ChartTooltip content={<ChartTooltipContent hideLabel/>} />
+              <ChartTooltip content={<ChartTooltipContent hideLabel hideIndicator/>} />
               <defs>
               <linearGradient id="fillinitialInvestment" x1="0" y1="0" x2="0" y2="1">
                 <stop
