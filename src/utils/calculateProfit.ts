@@ -12,7 +12,7 @@ interface Amounts {
     if (!isNaN(buy1) && !isNaN(buy2) && !isNaN(sell1) && !isNaN(sell2) && buy2 !== 0 && sell2 !== 0) {
       const buyRatio = buy1 / buy2;
       const sellRatio = sell1 / sell2;
-      return buyRatio - sellRatio;
+      return (buyRatio / sellRatio - 1);
     } else {
       return null;
     }
