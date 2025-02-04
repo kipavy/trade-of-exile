@@ -58,7 +58,7 @@ export default function RatioCalculator() {
       <CardHeader>
         <CardTitle>Ratio Calculator</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className='pb-1'>
         <div className="flex items-center space-x-4">
           <div className="flex flex-col justify-center space-y-2">
             <Button onClick={swapAmounts} className="group">
@@ -68,7 +68,7 @@ export default function RatioCalculator() {
               <RotateCw className="w-6 h-6 transition-transform duration-300 group-hover:rotate-180" />
             </Button>
           </div>
-          <div className="space-y-4 flex-1">
+          <div className="space-y-2 flex-1">
           <RatioInput
               label="Buying Ratio"
               amount1={Number(buyAmount1)}
