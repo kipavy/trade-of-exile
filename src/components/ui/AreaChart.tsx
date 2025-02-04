@@ -62,7 +62,7 @@ export default function AreaChartComponent() {
               <TooltipTrigger>
                 <RectangleEllipsis className="hover:stroke-primary"/>
               </TooltipTrigger>
-              <TooltipContent side="bottom" align="start" className="bg-primary">
+              <TooltipContent side="bottom" align="start">
                 <div>
                   {chartData.slice(1,-1).map((data, index) => (
                     <div key={index} className="flex items-center gap-1">

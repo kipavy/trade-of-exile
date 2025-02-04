@@ -76,6 +76,7 @@ export default function RatioCalculator() {
               amount2={Number(buyAmount2)}
               setAmount2={(value) => dispatch(setBuyAmount2(value.toString()))}
               invertRatios={() => invertRatios('buy')}
+              suffix2='ex'
             />
             <RatioInput
               label="Selling Ratio"
@@ -86,6 +87,7 @@ export default function RatioCalculator() {
               invertRatios={() => invertRatios('sell')}
               placeholder1="Have"
               placeholder2="Want"
+              suffix2='ex'
             />
           </div>
         </div>

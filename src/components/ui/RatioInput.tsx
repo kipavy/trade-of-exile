@@ -12,9 +12,11 @@ interface RatioInputProps {
   invertRatios: () => void;
   placeholder1?: string;
   placeholder2?: string;
+  suffix1?: string;
+  suffix2?: string;
 }
 
-export default function RatioInput({ label, amount1, setAmount1, amount2, setAmount2, invertRatios, placeholder1 = "Want", placeholder2 = "Have" }: RatioInputProps) {
+export default function RatioInput({ label, amount1, setAmount1, amount2, setAmount2, invertRatios, placeholder1 = "Want", placeholder2 = "Have", suffix1, suffix2 }: RatioInputProps) {
     return (
       <div>
         <Label htmlFor={label}>
@@ -27,6 +29,7 @@ export default function RatioInput({ label, amount1, setAmount1, amount2, setAmo
             onChange={(e) => setAmount1(e.target.value ? Number(e.target.value) : '')}
             placeholder={placeholder1}
             className="max-w-3xs mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            suffix={suffix1}
           />
           <span>:</span>
           <Input
@@ -35,6 +38,7 @@ export default function RatioInput({ label, amount1, setAmount1, amount2, setAmo
             onChange={(e) => setAmount2(e.target.value ? Number(e.target.value) : '')}
             placeholder={placeholder2}
             className="max-w-3xs mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            suffix={suffix2}
           />
           <Button onClick={invertRatios} className="ml-2 group">
             <ArrowRightLeft className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" />
