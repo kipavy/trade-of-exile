@@ -44,6 +44,22 @@ export default function AreaChartComponent() {
   const buyValue = (Number(buyAmount1) / Number(buyAmount2)) * initialInvestment;
   const sellValue = (initialInvestment + (initialInvestment * interestRate/100)).toFixed(2);
 
+  const [isTooltipVisible, setTooltipVisible] = useState(false);
+  const [isTooltipPersistent, setTooltipPersistent] = useState(false);
+
+  const handleTooltipToggle = () => {
+    setTooltipPersistent(!isTooltipPersistent);
+    setTimeout(() => {
+      setTooltipVisible(!isTooltipPersistent);
+    }, 0);
+  };
+
+  const handleTooltipHover = (visible: boolean) => {
+    if (!isTooltipPersistent) {
+      setTooltipVisible(visible);
+    }
+  };
+
   return (
     <Card>
       <CardHeader className="pb-4">
@@ -58,21 +74,24 @@ export default function AreaChartComponent() {
             <span className="text-red-500">Selling</span> {buyValue.toFixed(2)} currency for {sellValue} ex
           </span>
           <TooltipProvider delayDuration={200}>
-            <Tooltip>
-              <TooltipTrigger>
-                <RectangleEllipsis className="hover:stroke-primary"/>
+            <Tooltip open={isTooltipVisible} onOpenChange={handleTooltipHover}>
+              <TooltipTrigger onClick={handleTooltipToggle} className="w-fit">
+              <RectangleEllipsis className={`hover:stroke-primary ${isTooltipVisible ? 'stroke-primary' : ''}`} />
               </TooltipTrigger>
-              <TooltipContent side="bottom" align="start">
+              <TooltipContent side="bottom" align="start" className={isTooltipPersistent ? 'border-3 border-purple-500' : ''}>
                 <div>
-                  {chartData.slice(1,-1).map((data, index) => (
-                    <div key={index} className="flex items-center gap-1">
-                      <span>{index + 2}:</span>
-                      <ArrowUpRight className="h-4 w-4 text-green-500" />
-                      <span>{data.withInterest.toFixed(2)}</span>
-                      <ArrowDownRight className="h-4 w-4 text-red-500" />
-                      <span>{(data.withInterest + data.withInterest * interestRate / 100).toFixed()} ex</span>
-                    </div>
-                  ))}
+                  {chartData.slice(1, -1).map((data, index) => {
+                    const iterationBuyValue = (Number(buyAmount1) / Number(buyAmount2)) * data.withInterest;
+                    return (
+                      <div key={index} className="flex items-center gap-1">
+                        <span>{index + 2}:</span>
+                        <ArrowUpRight className="h-4 w-4 text-green-500" />
+                        <span>{iterationBuyValue.toFixed(2)} cur. for {data.withInterest.toFixed(2)} ex</span>
+                        <ArrowDownRight className="h-4 w-4 text-red-500" />
+                        <span>{(data.withInterest + data.withInterest * interestRate / 100).toFixed()} ex</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </TooltipContent>
             </Tooltip>
