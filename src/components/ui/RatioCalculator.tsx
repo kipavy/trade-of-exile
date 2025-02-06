@@ -69,8 +69,8 @@ export default function RatioCalculator() {
             </Button>
           </div>
           <div className="space-y-2 flex-1">
-          <RatioInput
-              label="Buying Ratio"
+            <RatioInput
+              labelPrefix="Buying Ratio"
               amount1={Number(buyAmount1)}
               setAmount1={(value) => dispatch(setBuyAmount1(value.toString()))}
               amount2={Number(buyAmount2)}
@@ -79,7 +79,7 @@ export default function RatioCalculator() {
               suffix2='ex'
             />
             <RatioInput
-              label="Selling Ratio"
+              labelPrefix="Selling Ratio"
               amount1={Number(sellAmount1)}
               setAmount1={(value) => dispatch(setSellAmount1(value.toString()))}
               amount2={Number(sellAmount2)}
@@ -95,7 +95,7 @@ export default function RatioCalculator() {
       <CardFooter>
         {profit !== null && (
           <div className="mt-4 text-lg font-bold">
-            Profit: <span className={getProfitColor(profit)}>{profit > 0 ? "+" : ""}{(profit*100).toFixed(2)}%</span>
+            Profit: <span className={getProfitColor(profit)}>{profit > 0 ? "+" : ""}{(profit * 100).toFixed(2)}%</span>
           </div>
         )}
       </CardFooter>
