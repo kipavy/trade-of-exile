@@ -10,11 +10,13 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"
 import { type ChartConfig } from "@/types/chart"
 import { useCalculateGrowth } from "@/hooks/useCalculateGrowth"
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/stores/store';
-import { TrendingUp, ArrowDownRight, ArrowUpRight, RectangleEllipsis } from "lucide-react"
+import { TrendingUp, ArrowDownRight, ArrowUpRight, RectangleEllipsis, EqualApproximately } from "lucide-react"
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
+import { setSellAmount1, setSellAmount2 } from "@/stores/slices/tradeSlice"
 export default function AreaChartComponent() {
+  const dispatch = useDispatch();
   const { buyAmount1, buyAmount2, profit } = useSelector((state: RootState) => state.trade);
   const defaultProfit = profit ?? 0;
   const [initialInvestment, setInitialInvestment] = useState<number>(10000)
@@ -42,7 +44,7 @@ export default function AreaChartComponent() {
   }
 
   const buyValue = (Number(buyAmount1) / Number(buyAmount2)) * initialInvestment;
-  const sellValue = (initialInvestment + (initialInvestment * interestRate/100)).toFixed(2);
+  const sellValue = (initialInvestment * (1 + interestRate / 100)).toFixed(2);
 
   const [isTooltipVisible, setTooltipVisible] = useState(false);
   const [isTooltipPersistent, setTooltipPersistent] = useState(false);
@@ -58,6 +60,17 @@ export default function AreaChartComponent() {
     if (!isTooltipPersistent) {
       setTooltipVisible(visible);
     }
+  };
+
+  const adjustValues = () => {
+    const buyAmount2Number = Number(buyAmount2);
+    const roundedInitialInvestment = Math.round(initialInvestment / buyAmount2Number) * buyAmount2Number;
+    setInitialInvestment(roundedInitialInvestment);
+
+    const sell = (buyValue/initialInvestment*roundedInitialInvestment)
+    const sell2 = Math.floor(+sellValue/initialInvestment*roundedInitialInvestment);
+    dispatch(setSellAmount1(sell.toString()));
+    dispatch(setSellAmount2(sell2.toString()));
   };
 
   return (
@@ -88,7 +101,7 @@ export default function AreaChartComponent() {
                         <ArrowUpRight className="h-4 w-4 text-green-500" />
                         <span>{iterationBuyValue.toFixed(2)} cur. for {data.withInterest.toFixed(2)} ex</span>
                         <ArrowDownRight className="h-4 w-4 text-red-500" />
-                        <span>{(data.withInterest + data.withInterest * interestRate / 100).toFixed()} ex</span>
+                        <span>{(data.withInterest * (1 + interestRate / 100)).toFixed()} ex</span>
                       </div>
                     );
                   })}
@@ -123,6 +136,7 @@ export default function AreaChartComponent() {
               type="number"
               value={initialInvestment}
               onChange={(e) => setInitialInvestment(Number(e.target.value))}
+              suffix={<EqualApproximately onClick={adjustValues} />}
             />
           </div>
           <div>

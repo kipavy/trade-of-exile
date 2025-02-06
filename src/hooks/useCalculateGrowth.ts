@@ -2,13 +2,18 @@ import { useState, useEffect } from "react"
 
 const calculateGrowth = (principal: number, rate: number, iterations: number) => {
   return Array.from({ length: iterations + 1 }, (_, index) => {
-    const withInterest = principal * Math.pow(1 + rate, index)
-    const linearGrowth = principal + (principal * rate) * index
+    let withInterest = principal * Math.pow(1 + rate, index)
+    let linearGrowth = principal * (1 + rate * index)
+
+    // Ensure values don't go below zero
+    withInterest = withInterest < 0 ? 0 : withInterest
+    linearGrowth = linearGrowth < 0 ? 0 : linearGrowth
+
     return {
       iteration: index,
       initialInvestment: principal,
-      withInterest: withInterest < 0 ? 0 : withInterest, // Ensure it doesn't go below zero
-      linearGrowth: linearGrowth < 0 ? 0 : linearGrowth, // Ensure it doesn't go below zero
+      withInterest,
+      linearGrowth,
     }
   })
 }
