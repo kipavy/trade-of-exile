@@ -44,7 +44,6 @@ export default function AreaChartComponent() {
       color: "hsl(var(--chart-3))",
     },
   }
-  const { currencyIcon } = useSelector((state: RootState) => state.currency);
   const buyValue = (Number(buyAmount1) / Number(buyAmount2)) * initialInvestment;
   const sellValue = (initialInvestment * (1 + interestRate / 100)).toFixed(2);
 

@@ -17,10 +17,6 @@ interface RatioInputProps {
   suffix2?: React.ReactNode;
 }
 
-const isRatioDefined = (amount1?: number | '', amount2?: number | '') => {
-  return amount1 && amount2 && amount1 !== 0;
-};
-
 export default function RatioInput({
   labelPrefix,
   amount1,
@@ -33,21 +29,33 @@ export default function RatioInput({
   suffix1,
   suffix2,
 }: RatioInputProps) {
+  const showRatio =
+    amount1 !== '' &&
+    amount2 !== '' &&
+    amount1 !== 0;
+  const ratio = showRatio
+    ? (Number(amount2) / Number(amount1)).toFixed(2)
+    : '';
+
+  const getValue = (amount: number | '' | undefined) =>
+  amount === '' || amount === undefined ? '' : amount;
 
   return (
     <div>
       <Label className="flex items-center">
-        {labelPrefix} 
+        {labelPrefix}
         <span className="text-muted-foreground flex items-center ml-1">
-          {isRatioDefined(amount1, amount2) ? `1/${(amount2 / amount1).toFixed(2)}` : ''} 
-          {isRatioDefined(amount1, amount2) && <CurrencyPopover />}
+          {showRatio && `1/${ratio}`}
+          {showRatio && <CurrencyPopover />}
         </span>
       </Label>
       <div className="flex items-center space-x-1">
         <Input
           type="number"
-          value={amount1 || ''}
-          onChange={(e) => setAmount1(e.target.value ? Number(e.target.value) : '')}
+          value={getValue(amount1)}
+          onChange={(e) =>
+            setAmount1(e.target.value ? Number(e.target.value) : '')
+          }
           placeholder={placeholder1}
           className="max-w-3xs mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           suffix={suffix1}
@@ -55,8 +63,10 @@ export default function RatioInput({
         <span>:</span>
         <Input
           type="number"
-          value={amount2 || ''}
-          onChange={(e) => setAmount2(e.target.value ? Number(e.target.value) : '')}
+          value={getValue(amount2)}
+          onChange={(e) =>
+            setAmount2(e.target.value ? Number(e.target.value) : '')
+          }
           placeholder={placeholder2}
           className="max-w-3xs mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           suffix={suffix2}

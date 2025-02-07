@@ -14,8 +14,10 @@ interface CurrencyState {
   currencies: Currency[];
 }
 
+const localStorageKey = 'currency';
+
 const initialState: CurrencyState = {
-  currency: 'divine',
+  currency: localStorage.getItem(localStorageKey) || 'divine',
   currencyIcon: divineOrbIcon,
   currencies: [
     { value: 'ex', label: 'Exalted Orb', icon: exaltedOrbIcon },
@@ -30,6 +32,7 @@ const currencySlice = createSlice({
     setCurrency: (state, action: PayloadAction<string>) => {
       state.currency = action.payload;
       state.currencyIcon = state.currencies.find(c => c.value === action.payload)?.icon || '';
+      localStorage.setItem(localStorageKey, action.payload);
     },
   },
 });
