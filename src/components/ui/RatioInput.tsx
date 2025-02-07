@@ -17,6 +17,19 @@ interface RatioInputProps {
   suffix2?: React.ReactNode;
 }
 
+interface RatioDisplayProps {
+  ratio: string;
+}
+
+function RatioDisplay({ ratio }: RatioDisplayProps) {
+  return (
+    <div className="text-sm text-muted-foreground flex items-center">
+      <span>{`1/${ratio}`}</span>
+      <CurrencyPopover />
+    </div>
+  );
+}
+
 export default function RatioInput({
   labelPrefix,
   amount1,
@@ -38,17 +51,14 @@ export default function RatioInput({
     : '';
 
   const getValue = (amount: number | '' | undefined) =>
-  amount === '' || amount === undefined ? '' : amount;
+    amount === '' || amount === undefined ? '' : amount;
 
   return (
     <div>
-      <Label className="flex items-center">
-        {labelPrefix}
-        <span className="text-muted-foreground flex items-center ml-1">
-          {showRatio && `1/${ratio}`}
-          {showRatio && <CurrencyPopover />}
-        </span>
-      </Label>
+      <div className="flex items-center space-x-1">
+        <Label>{labelPrefix}</Label>
+        {showRatio && <RatioDisplay ratio={ratio} />}
+      </div>
       <div className="flex items-center space-x-1">
         <Input
           type="number"
