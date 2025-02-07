@@ -15,6 +15,8 @@ import { RootState } from '@/stores/store';
 import { TrendingUp, ArrowDownRight, ArrowUpRight, RectangleEllipsis, EqualApproximately } from "lucide-react"
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
 import { setSellAmount1, setSellAmount2 } from "@/stores/slices/tradeSlice"
+import { CurrencyPopover } from "./CurrencyPopover"
+
 export default function AreaChartComponent() {
   const dispatch = useDispatch();
   const { buyAmount1, buyAmount2, profit } = useSelector((state: RootState) => state.trade);
@@ -42,7 +44,7 @@ export default function AreaChartComponent() {
       color: "hsl(var(--chart-3))",
     },
   }
-
+  const { currencyIcon } = useSelector((state: RootState) => state.currency);
   const buyValue = (Number(buyAmount1) / Number(buyAmount2)) * initialInvestment;
   const sellValue = (initialInvestment * (1 + interestRate / 100)).toFixed(2);
 
@@ -80,12 +82,14 @@ export default function AreaChartComponent() {
           Investment Growth <TrendingUp className="inline-block h-5 w-5" />
         </CardTitle>
         <CardDescription className="flex flex-col">
-          <span>
-            <span className="text-green-500">Buying</span> {buyValue.toFixed(2)} currency for {initialInvestment} ex
-          </span>
-          <span>
-            <span className="text-red-500">Selling</span> {buyValue.toFixed(2)} currency for {sellValue} ex
-          </span>
+        <span className="flex items-center">
+          <span className="text-green-500 mr-1">Buying</span> {buyValue.toFixed(2)} currency for {initialInvestment}
+          <CurrencyPopover />
+        </span>
+        <span className="flex items-center">
+          <span className="text-red-500 mr-1">Selling</span> {buyValue.toFixed(2)} currency for {sellValue}
+          <CurrencyPopover />
+        </span>
           <TooltipProvider delayDuration={200}>
             <Tooltip open={isTooltipVisible} onOpenChange={handleTooltipHover}>
               <TooltipTrigger onClick={handleTooltipToggle} className="w-fit">

@@ -7,6 +7,7 @@ import { calculateProfit } from '@/utils/calculateProfit';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/stores/store';
 import { setBuyAmount1, setBuyAmount2, setSellAmount1, setSellAmount2, setProfit } from '@/stores/slices/tradeSlice';
+import { CurrencyPopover } from './CurrencyPopover';
 
 export default function RatioCalculator() {
   const dispatch = useDispatch();
@@ -53,6 +54,11 @@ export default function RatioCalculator() {
     return "text-white"
   }
 
+  const parseAmount = (amount: string) => {
+    const parsed = parseFloat(amount);
+    return isNaN(parsed) ? '' : parsed;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -71,23 +77,23 @@ export default function RatioCalculator() {
           <div className="space-y-2 flex-1">
             <RatioInput
               labelPrefix="Buying Ratio"
-              amount1={Number(buyAmount1)}
+              amount1={parseAmount(buyAmount1)}
               setAmount1={(value) => dispatch(setBuyAmount1(value.toString()))}
-              amount2={Number(buyAmount2)}
+              amount2={parseAmount(buyAmount2)}
               setAmount2={(value) => dispatch(setBuyAmount2(value.toString()))}
               invertRatios={() => invertRatios('buy')}
-              suffix2='ex'
+              suffix2={<CurrencyPopover />}
             />
             <RatioInput
               labelPrefix="Selling Ratio"
-              amount1={Number(sellAmount1)}
+              amount1={parseAmount(sellAmount1)}
               setAmount1={(value) => dispatch(setSellAmount1(value.toString()))}
-              amount2={Number(sellAmount2)}
+              amount2={parseAmount(sellAmount2)}
               setAmount2={(value) => dispatch(setSellAmount2(value.toString()))}
               invertRatios={() => invertRatios('sell')}
               placeholder1="Have"
               placeholder2="Want"
-              suffix2='ex'
+              suffix2={<CurrencyPopover />}
             />
           </div>
         </div>

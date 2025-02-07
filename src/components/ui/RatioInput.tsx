@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ArrowRightLeft } from "lucide-react";
+import { CurrencyPopover } from "./CurrencyPopover";
 
 interface RatioInputProps {
   labelPrefix: string;
@@ -12,9 +13,13 @@ interface RatioInputProps {
   invertRatios: () => void;
   placeholder1?: string;
   placeholder2?: string;
-  suffix1?: string;
-  suffix2?: string;
+  suffix1?: React.ReactNode;
+  suffix2?: React.ReactNode;
 }
+
+const isRatioDefined = (amount1?: number | '', amount2?: number | '') => {
+  return amount1 && amount2 && amount1 !== 0;
+};
 
 export default function RatioInput({
   labelPrefix,
@@ -31,8 +36,12 @@ export default function RatioInput({
 
   return (
     <div>
-      <Label>
-        {labelPrefix} <span className="text-muted-foreground">{amount1 && amount2 && Number(amount1) !== 0 ? `1/${(Number(amount2) / Number(amount1)).toFixed(2)} ex` : ''}</span>
+      <Label className="flex items-center">
+        {labelPrefix} 
+        <span className="text-muted-foreground flex items-center ml-1">
+          {isRatioDefined(amount1, amount2) ? `1/${(amount2 / amount1).toFixed(2)}` : ''} 
+          {isRatioDefined(amount1, amount2) && <CurrencyPopover />}
+        </span>
       </Label>
       <div className="flex items-center space-x-2">
         <Input
