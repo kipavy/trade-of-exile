@@ -43,7 +43,7 @@ export default function RatioInput({
           {isRatioDefined(amount1, amount2) && <CurrencyPopover />}
         </span>
       </Label>
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-1">
         <Input
           type="number"
           value={amount1 || ''}
