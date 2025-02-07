@@ -139,7 +139,12 @@ export default function AreaChartComponent() {
               type="number"
               value={initialInvestment}
               onChange={(e) => setInitialInvestment(Number(e.target.value))}
-              suffix={<EqualApproximately onClick={adjustValues} />}
+              suffix={
+                <EqualApproximately
+                  onClick={adjustValues}
+                  className="cursor-pointer transition-colors hover:text-blue-500 active:scale-90"
+                />
+              }
             />
           </div>
           <div>
