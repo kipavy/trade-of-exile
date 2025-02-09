@@ -75,7 +75,7 @@ export default function AreaChartComponent() {
   };
 
   return (
-    <Card>
+    <Card className="w-full max-w-3xl">
       <CardHeader className="pb-4">
         <CardTitle>
           Investment Growth <TrendingUp className="inline-block h-5 w-5" />
@@ -167,7 +167,7 @@ export default function AreaChartComponent() {
             />
           </div>
         </div>
-        <ChartContainer config={chartConfig} className="h-[400px]">
+        <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
