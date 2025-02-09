@@ -176,10 +176,16 @@ export default function AreaChartComponent() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="iteration" tickLine={false} axisLine={false} tickMargin={8} />
               <YAxis
-                tickFormatter={(value) => `${value.toLocaleString()}`}
+                tickFormatter={(value) => {
+                  if (value >= 1000000000) return `${(value / 1000000000).toFixed(1)}B`;
+                  if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+                  if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
+                  return value;
+                }}
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
+                width={45}
               />
               <ChartTooltip content={<ChartTooltipContent hideLabel hideIndicator/>} />
               <defs>
@@ -249,7 +255,7 @@ export default function AreaChartComponent() {
                   stackId="3"
                 />
               )}
-              <ChartLegend content={<ChartLegendContent />} />
+              <ChartLegend content={<ChartLegendContent />} className="whitespace-nowrap text-[clamp(0.65rem,2vw,0.875rem)]" />
             </AreaChart>
           </ResponsiveContainer>
         </ChartContainer>
