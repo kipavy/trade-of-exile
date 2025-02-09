@@ -115,7 +115,7 @@ export default function AreaChartComponent() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-3 gap-2 mb-6">
+        <div className="grid grid-cols-3 gap-2 mb-6 items-end">
           <div className="col-span-3 flex items-center">
             <Label htmlFor="showLinearGrowth" className="mr-2">Linear Growth</Label>
             <Checkbox
@@ -133,7 +133,9 @@ export default function AreaChartComponent() {
               />
           </div>
           <div>
-            <Label htmlFor="initialInvestment">Initial Investment</Label>
+            <Label className="whitespace-nowrap text-[clamp(0.75rem,2vw,0.875rem)]">
+              Initial Investment
+            </Label>
             <Input
               id="initialInvestment"
               type="number"
@@ -148,17 +150,18 @@ export default function AreaChartComponent() {
             />
           </div>
           <div>
-            <Label htmlFor="interestRate">Interest Rate (%)</Label>
+            <Label>Interest Rate</Label>
             <Input
               id="interestRate"
               type="number"
               value={(interestRate).toFixed(2)}
               onChange={(e) => setManualInterestRate(Number(e.target.value))}
               disabled={useComputedInterest}
+              suffix="%"
             />
           </div>
           <div>
-            <Label htmlFor="iterations">Iterations</Label>
+            <Label>Iterations</Label>
             <Input
               id="iterations"
               type="number"

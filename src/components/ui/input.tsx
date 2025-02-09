@@ -21,7 +21,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {suffix && (
-          <span className="absolute right-2 pt-1 text-muted-foreground flex items-center">
+          <span className="absolute right-2 text-muted-foreground flex items-center">
             {typeof suffix === "string" ? <span>{suffix}</span> : suffix}
           </span>
         )}
