@@ -20,14 +20,14 @@ import { CurrencyPopover } from "./CurrencyPopover"
 export default function AreaChartComponent() {
   const dispatch = useDispatch();
   const { buyAmount1, buyAmount2, profit } = useSelector((state: RootState) => state.trade);
-  const defaultProfit = profit ?? 0;
+  const defaultProfit = (profit ?? 0)*100;
   const [initialInvestment, setInitialInvestment] = useState<number>(10000)
   const [manualInterestRate, setManualInterestRate] = useState<number>(5)
   const [iterations, setIterations] = useState<number>(10)
   const [showLinearGrowth, setShowLinearGrowth] = useState<boolean>(true)
   const [useComputedInterest, setUseComputedInterest] = useState<boolean>(true)
 
-  const interestRate = useComputedInterest ? defaultProfit*100 : manualInterestRate
+  const interestRate = useComputedInterest ? +defaultProfit.toFixed(2) : manualInterestRate
   const chartData = useCalculateGrowth(initialInvestment, interestRate/100, iterations)
 
   const chartConfig: ChartConfig = {
@@ -154,10 +154,11 @@ export default function AreaChartComponent() {
             <Input
               id="interestRate"
               type="number"
-              value={(interestRate).toFixed(2)}
+              value={interestRate}
               onChange={(e) => setManualInterestRate(Number(e.target.value))}
               disabled={useComputedInterest}
               suffix="%"
+              step="0.01"
             />
           </div>
           <div>
