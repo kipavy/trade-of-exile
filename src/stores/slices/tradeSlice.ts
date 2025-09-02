@@ -6,6 +6,9 @@ interface TradeState {
   sellAmount1: string;
   sellAmount2: string;
   profit: number | null;
+  tradeOrb: string; // orb used for trade (orb that is bought and sold)
+  referenceOrb: string; // final orb wanted (reference orb)
+  goldCost: number | null;
 }
 
 const initialState: TradeState = {
@@ -14,6 +17,9 @@ const initialState: TradeState = {
   sellAmount1: localStorage.getItem('sellAmount1') || '',
   sellAmount2: localStorage.getItem('sellAmount2') || '',
   profit: null,
+  tradeOrb: localStorage.getItem('tradeOrb') || 'regal',
+  referenceOrb: localStorage.getItem('referenceOrb') || 'ex',
+  goldCost: null,
 };
 
 const tradeSlice = createSlice({
@@ -39,9 +45,20 @@ const tradeSlice = createSlice({
     setProfit: (state, action: PayloadAction<number | null>) => {
       state.profit = action.payload;
     },
+    setTradeOrb: (state, action: PayloadAction<string>) => {
+      state.tradeOrb = action.payload;
+      localStorage.setItem('tradeOrb', action.payload);
+    },
+    setReferenceOrb: (state, action: PayloadAction<string>) => {
+      state.referenceOrb = action.payload;
+      localStorage.setItem('referenceOrb', action.payload);
+    },
+    setGoldCost: (state, action: PayloadAction<number | null>) => {
+      state.goldCost = action.payload;
+    },
   },
 });
 
-export const { setBuyAmount1, setBuyAmount2, setSellAmount1, setSellAmount2, setProfit } = tradeSlice.actions;
+export const { setBuyAmount1, setBuyAmount2, setSellAmount1, setSellAmount2, setProfit, setTradeOrb, setReferenceOrb, setGoldCost } = tradeSlice.actions;
 
 export default tradeSlice.reducer;

@@ -1,28 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import divineOrbIcon from '/divine-orb.png';
-import exaltedOrbIcon from '/exalted-orb.png';
-
-interface Currency {
-  value: string;
-  label: string;
-  icon: string;
-}
+import { currenciesWithGold, CurrencyWithGold, getCurrencyByValue } from '@/data/goldCosts';
 
 interface CurrencyState {
   currency: string;
   currencyIcon: string;
-  currencies: Currency[];
+  currencies: CurrencyWithGold[];
 }
 
 const localStorageKey = 'currency';
 
 const initialState: CurrencyState = {
   currency: localStorage.getItem(localStorageKey) || 'divine',
-  currencyIcon: divineOrbIcon,
-  currencies: [
-    { value: 'ex', label: 'Exalted Orb', icon: exaltedOrbIcon },
-    { value: 'divine', label: 'Divine Orb', icon: divineOrbIcon },
-  ],
+  currencyIcon: getCurrencyByValue(localStorage.getItem(localStorageKey) || 'divine')?.icon || '',
+  currencies: currenciesWithGold,
 };
 
 const currencySlice = createSlice({
@@ -31,7 +21,8 @@ const currencySlice = createSlice({
   reducers: {
     setCurrency: (state, action: PayloadAction<string>) => {
       state.currency = action.payload;
-      state.currencyIcon = state.currencies.find(c => c.value === action.payload)?.icon || '';
+      const selectedCurrency = getCurrencyByValue(action.payload);
+      state.currencyIcon = selectedCurrency?.icon || '';
       localStorage.setItem(localStorageKey, action.payload);
     },
   },

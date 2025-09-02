@@ -4,14 +4,17 @@ import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import RatioInput from '@/components/ui/RatioInput'
 import { calculateProfit } from '@/utils/calculateProfit';
+import { calculateGoldCost, formatGoldCost } from '@/utils/calculateGoldCost';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/stores/store';
-import { setBuyAmount1, setBuyAmount2, setSellAmount1, setSellAmount2, setProfit } from '@/stores/slices/tradeSlice';
+import { setBuyAmount1, setBuyAmount2, setSellAmount1, setSellAmount2, setProfit, setTradeOrb, setReferenceOrb, setGoldCost } from '@/stores/slices/tradeSlice';
 import { CurrencyPopover } from './CurrencyPopover';
+import { OrbSelector } from './OrbSelector';
+import { currenciesWithGold } from '@/data/goldCosts';
 
 export default function RatioCalculator() {
   const dispatch = useDispatch();
-  const { buyAmount1, buyAmount2, sellAmount1, sellAmount2, profit } = useSelector((state: RootState) => state.trade);
+  const { buyAmount1, buyAmount2, sellAmount1, sellAmount2, profit, tradeOrb, referenceOrb, goldCost } = useSelector((state: RootState) => state.trade);
 
   useEffect(() => {
     const profit = calculateProfit(
@@ -19,7 +22,14 @@ export default function RatioCalculator() {
       { amount1: sellAmount1, amount2: sellAmount2 }
     );
     dispatch(setProfit(profit));
-  }, [buyAmount1, buyAmount2, sellAmount1, sellAmount2]);
+
+    const goldCost = calculateGoldCost(
+      { buyAmount1, buyAmount2, sellAmount1, sellAmount2 },
+      tradeOrb,
+      referenceOrb
+    );
+    dispatch(setGoldCost(goldCost));
+  }, [buyAmount1, buyAmount2, sellAmount1, sellAmount2, tradeOrb, referenceOrb, dispatch]);
 
   const invertRatios = (type: 'buy' | 'sell') => {
     if (type === 'buy') {
@@ -65,6 +75,29 @@ export default function RatioCalculator() {
         <CardTitle>Ratio Calculator</CardTitle>
       </CardHeader>
       <CardContent className='pb-1'>
+        {/* Orb Selection Section */}
+        <div className="mb-4 space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Trade Orb (Buy/Sell)</label>
+              <OrbSelector
+                value={tradeOrb}
+                onValueChange={(value) => dispatch(setTradeOrb(value))}
+                placeholder="Select trade orb..."
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Reference Orb (Final Goal)</label>
+              <OrbSelector
+                value={referenceOrb}
+                onValueChange={(value) => dispatch(setReferenceOrb(value))}
+                placeholder="Select reference orb..."
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Trade Calculation Section */}
         <div className="flex items-center space-x-4">
           <div className="flex flex-col justify-center space-y-2">
             <Button onClick={swapAmounts} className="group">
@@ -82,7 +115,20 @@ export default function RatioCalculator() {
               amount2={parseAmount(buyAmount2)}
               setAmount2={(value) => dispatch(setBuyAmount2(value.toString()))}
               invertRatios={() => invertRatios('buy')}
-              suffix2={<CurrencyPopover />}
+              suffix2={
+                <CurrencyPopover 
+                  items={currenciesWithGold}
+                  selectedItem={referenceOrb}
+                  onSelect={(value) => dispatch(setReferenceOrb(value))}
+                />
+              }
+              ratioCurrencyPopover={
+                <CurrencyPopover 
+                  items={currenciesWithGold}
+                  selectedItem={referenceOrb}
+                  onSelect={(value) => dispatch(setReferenceOrb(value))}
+                />
+              }
             />
             <RatioInput
               labelPrefix="Selling Ratio"
@@ -93,15 +139,33 @@ export default function RatioCalculator() {
               invertRatios={() => invertRatios('sell')}
               placeholder1="Have"
               placeholder2="Want"
-              suffix2={<CurrencyPopover />}
+              suffix2={
+                <CurrencyPopover 
+                  items={currenciesWithGold}
+                  selectedItem={referenceOrb}
+                  onSelect={(value) => dispatch(setReferenceOrb(value))}
+                />
+              }
+              ratioCurrencyPopover={
+                <CurrencyPopover 
+                  items={currenciesWithGold}
+                  selectedItem={referenceOrb}
+                  onSelect={(value) => dispatch(setReferenceOrb(value))}
+                />
+              }
             />
           </div>
         </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex flex-col items-start space-y-2">
         {profit !== null && (
-          <div className="mt-4 text-lg font-bold">
+          <div className="text-lg font-bold">
             Profit: <span className={getProfitColor(profit)}>{profit > 0 ? "+" : ""}{(profit * 100).toFixed(2)}%</span>
+          </div>
+        )}
+        {goldCost !== null && (
+          <div className="text-lg font-bold">
+            Gold Cost <span className="text-sm font-normal text-muted-foreground"></span>: <span className="text-yellow-500">{formatGoldCost(goldCost)} / orb</span>
           </div>
         )}
       </CardFooter>

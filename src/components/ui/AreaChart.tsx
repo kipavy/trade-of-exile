@@ -14,12 +14,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/stores/store';
 import { TrendingUp, ArrowDownRight, ArrowUpRight, RectangleEllipsis, EqualApproximately } from "lucide-react"
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
-import { setSellAmount1, setSellAmount2 } from "@/stores/slices/tradeSlice"
+import { setSellAmount1, setSellAmount2, setReferenceOrb } from '@/stores/slices/tradeSlice'
 import { CurrencyPopover } from "./CurrencyPopover"
+import { currenciesWithGold } from "@/data/goldCosts"
 
 export default function AreaChartComponent() {
   const dispatch = useDispatch();
-  const { buyAmount1, buyAmount2, profit } = useSelector((state: RootState) => state.trade);
+  const { buyAmount1, buyAmount2, profit, referenceOrb } = useSelector((state: RootState) => state.trade);
   const defaultProfit = (profit ?? 0)*100;
   const [initialInvestment, setInitialInvestment] = useState<number>(10000)
   const [manualInterestRate, setManualInterestRate] = useState<number>(5)
@@ -83,11 +84,19 @@ export default function AreaChartComponent() {
         <CardDescription className="flex flex-col">
         <span className="flex items-center">
           <span className="text-green-500 mr-1">Buying</span> {buyValue.toFixed(2)} currency for {initialInvestment}
-          <CurrencyPopover />
+          <CurrencyPopover 
+            items={currenciesWithGold}
+            selectedItem={referenceOrb}
+            onSelect={(value) => dispatch(setReferenceOrb(value))}
+          />
         </span>
         <span className="flex items-center">
           <span className="text-red-500 mr-1">Selling</span> {buyValue.toFixed(2)} currency for {sellValue}
-          <CurrencyPopover />
+          <CurrencyPopover 
+            items={currenciesWithGold}
+            selectedItem={referenceOrb}
+            onSelect={(value) => dispatch(setReferenceOrb(value))}
+          />
         </span>
           <TooltipProvider delayDuration={200}>
             <Tooltip open={isTooltipVisible} onOpenChange={handleTooltipHover}>
