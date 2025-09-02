@@ -115,14 +115,14 @@ export default function RatioCalculator() {
               amount2={parseAmount(buyAmount2)}
               setAmount2={(value) => dispatch(setBuyAmount2(value.toString()))}
               invertRatios={() => invertRatios('buy')}
-              suffix2={
-                <CurrencyPopover 
+              suffix1={
+                <CurrencyPopover
                   items={currenciesWithGold}
-                  selectedItem={referenceOrb}
-                  onSelect={(value) => dispatch(setReferenceOrb(value))}
+                  selectedItem={tradeOrb}
+                  onSelect={(value) => dispatch(setTradeOrb(value))}
                 />
               }
-              ratioCurrencyPopover={
+              suffix2={
                 <CurrencyPopover 
                   items={currenciesWithGold}
                   selectedItem={referenceOrb}
@@ -139,14 +139,14 @@ export default function RatioCalculator() {
               invertRatios={() => invertRatios('sell')}
               placeholder1="Have"
               placeholder2="Want"
-              suffix2={
-                <CurrencyPopover 
+              suffix1={
+                <CurrencyPopover
                   items={currenciesWithGold}
-                  selectedItem={referenceOrb}
-                  onSelect={(value) => dispatch(setReferenceOrb(value))}
+                  selectedItem={tradeOrb}
+                  onSelect={(value) => dispatch(setTradeOrb(value))}
                 />
               }
-              ratioCurrencyPopover={
+              suffix2={
                 <CurrencyPopover 
                   items={currenciesWithGold}
                   selectedItem={referenceOrb}
