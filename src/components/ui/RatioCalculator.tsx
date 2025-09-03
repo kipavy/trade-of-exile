@@ -10,7 +10,7 @@ import { RootState } from '@/stores/store';
 import { setBuyAmount1, setBuyAmount2, setSellAmount1, setSellAmount2, setProfit, setTradeOrb, setReferenceOrb, setGoldCost } from '@/stores/slices/tradeSlice';
 import { CurrencyPopover } from './CurrencyPopover';
 import { OrbSelector } from './OrbSelector';
-import { currenciesWithGold } from '@/data/goldCosts';
+import { currenciesWithGold, getGoldCostByCurrency } from '@/data/goldCosts';
 
 export default function RatioCalculator() {
   const dispatch = useDispatch();
@@ -69,6 +69,34 @@ export default function RatioCalculator() {
     return isNaN(parsed) ? '' : parsed;
   };
 
+  // Calculate cost for buying step (buy1 * tradeOrbCost)
+  const calculateBuyingStepCost = () => {
+    const buy1 = parseFloat(buyAmount1);
+    if (isNaN(buy1) || !tradeOrb) return null;
+    
+    const tradeOrbGoldCost = getGoldCostByCurrency(tradeOrb);
+    return buy1 * tradeOrbGoldCost;
+  };
+
+  // Calculate cost for selling step (sell2 * referenceOrbCost)
+  const calculateSellingStepCost = () => {
+    const sell2 = parseFloat(sellAmount2);
+    if (isNaN(sell2) || !referenceOrb) return null;
+    
+    const referenceOrbGoldCost = getGoldCostByCurrency(referenceOrb);
+    return sell2 * referenceOrbGoldCost;
+  };
+
+  // Calculate total cost for current trade
+  const calculateTotalTradeCost = () => {
+    const buyingCost = calculateBuyingStepCost();
+    const sellingCost = calculateSellingStepCost();
+    
+    if (buyingCost === null || sellingCost === null) return null;
+    
+    return buyingCost + sellingCost;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -108,56 +136,76 @@ export default function RatioCalculator() {
             </Button>
           </div>
           <div className="space-y-2 flex-1">
-            <RatioInput
-              labelPrefix="Buying Ratio"
-              amount1={parseAmount(buyAmount1)}
-              setAmount1={(value) => dispatch(setBuyAmount1(value.toString()))}
-              amount2={parseAmount(buyAmount2)}
-              setAmount2={(value) => dispatch(setBuyAmount2(value.toString()))}
-              invertRatios={() => invertRatios('buy')}
-              suffix1={
-                <CurrencyPopover
-                  items={currenciesWithGold}
-                  selectedItem={tradeOrb}
-                  onSelect={(value) => dispatch(setTradeOrb(value))}
-                />
-              }
-              suffix2={
-                <CurrencyPopover 
-                  items={currenciesWithGold}
-                  selectedItem={referenceOrb}
-                  onSelect={(value) => dispatch(setReferenceOrb(value))}
-                />
-              }
-            />
-            <RatioInput
-              labelPrefix="Selling Ratio"
-              amount1={parseAmount(sellAmount1)}
-              setAmount1={(value) => dispatch(setSellAmount1(value.toString()))}
-              amount2={parseAmount(sellAmount2)}
-              setAmount2={(value) => dispatch(setSellAmount2(value.toString()))}
-              invertRatios={() => invertRatios('sell')}
-              placeholder1="Have"
-              placeholder2="Want"
-              suffix1={
-                <CurrencyPopover
-                  items={currenciesWithGold}
-                  selectedItem={tradeOrb}
-                  onSelect={(value) => dispatch(setTradeOrb(value))}
-                />
-              }
-              suffix2={
-                <CurrencyPopover 
-                  items={currenciesWithGold}
-                  selectedItem={referenceOrb}
-                  onSelect={(value) => dispatch(setReferenceOrb(value))}
-                />
-              }
-            />
+            <div>
+              <RatioInput
+                labelPrefix="Buying Ratio"
+                amount1={parseAmount(buyAmount1)}
+                setAmount1={(value) => dispatch(setBuyAmount1(value.toString()))}
+                amount2={parseAmount(buyAmount2)}
+                setAmount2={(value) => dispatch(setBuyAmount2(value.toString()))}
+                invertRatios={() => invertRatios('buy')}
+                suffix1={
+                  <CurrencyPopover
+                    items={currenciesWithGold}
+                    selectedItem={tradeOrb}
+                    onSelect={(value) => dispatch(setTradeOrb(value))}
+                  />
+                }
+                suffix2={
+                  <CurrencyPopover 
+                    items={currenciesWithGold}
+                    selectedItem={referenceOrb}
+                    onSelect={(value) => dispatch(setReferenceOrb(value))}
+                  />
+                }
+              />
+              {/* Cost display positioned under the second input */}
+              <div className="relative">
+                <div className="absolute right-15 top-1 text-xs text-yellow-500">
+                  {calculateBuyingStepCost() !== null && (
+                    <div>Cost: {formatGoldCost(calculateBuyingStepCost())} gold</div>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div>
+              <RatioInput
+                labelPrefix="Selling Ratio"
+                amount1={parseAmount(sellAmount1)}
+                setAmount1={(value) => dispatch(setSellAmount1(value.toString()))}
+                amount2={parseAmount(sellAmount2)}
+                setAmount2={(value) => dispatch(setSellAmount2(value.toString()))}
+                invertRatios={() => invertRatios('sell')}
+                placeholder1="Have"
+                placeholder2="Want"
+                suffix1={
+                  <CurrencyPopover
+                    items={currenciesWithGold}
+                    selectedItem={tradeOrb}
+                    onSelect={(value) => dispatch(setTradeOrb(value))}
+                  />
+                }
+                suffix2={
+                  <CurrencyPopover 
+                    items={currenciesWithGold}
+                    selectedItem={referenceOrb}
+                    onSelect={(value) => dispatch(setReferenceOrb(value))}
+                  />
+                }
+              />
+              {/* Cost display positioned under the second input */}
+              <div className="relative">
+                <div className="absolute right-15 top-1 text-xs text-yellow-500">
+                  {calculateSellingStepCost() !== null && (
+                    <div>Cost: {formatGoldCost(calculateSellingStepCost())} gold</div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex flex-col items-start space-y-2">
+      <CardFooter className="flex flex-col items-start space-y-2 mt-6">
         {profit !== null && (
           <div className="text-lg font-bold">
             Profit: <span className={getProfitColor(profit)}>{profit > 0 ? "+" : ""}{(profit * 100).toFixed(2)}%</span>
@@ -166,6 +214,11 @@ export default function RatioCalculator() {
         {goldCost !== null && (
           <div className="text-lg font-bold">
             Gold Cost <span className="text-sm font-normal text-muted-foreground"></span>: <span className="text-yellow-500">{formatGoldCost(goldCost)} gold / orb</span>
+          </div>
+        )}
+        {calculateTotalTradeCost() !== null && (
+          <div className="text-lg font-bold">
+            Total Trade Cost: <span className="text-yellow-500">{formatGoldCost(calculateTotalTradeCost())} gold</span>
           </div>
         )}
       </CardFooter>
