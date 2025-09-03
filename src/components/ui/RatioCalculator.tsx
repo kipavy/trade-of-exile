@@ -165,7 +165,7 @@ export default function RatioCalculator() {
         )}
         {goldCost !== null && (
           <div className="text-lg font-bold">
-            Gold Cost <span className="text-sm font-normal text-muted-foreground"></span>: <span className="text-yellow-500">{formatGoldCost(goldCost)} / orb</span>
+            Gold Cost <span className="text-sm font-normal text-muted-foreground"></span>: <span className="text-yellow-500">{formatGoldCost(goldCost)} gold / orb</span>
           </div>
         )}
       </CardFooter>

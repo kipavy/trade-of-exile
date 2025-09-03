@@ -25,16 +25,20 @@ export function calculateGoldCost(
   const tradeOrbGoldCost = getGoldCostByCurrency(tradeOrb);
   const referenceOrbGoldCost = getGoldCostByCurrency(referenceOrb);
 
-  // Calculate total gold cost for the complete trade cycle
-  // Cost = (buy amount of trade orb × trade orb gold cost) + (sell amount of reference orb × reference orb gold cost)
-  const goldCost = (buy1 * tradeOrbGoldCost) + (sell2 * referenceOrbGoldCost);
+  const netReferenceOrbProfit = (sell2 / sell1) - (buy2 / buy1);
+  
+  // For 1 trade orb, the gold cost is:
+  const goldCostPerTradeOrb = tradeOrbGoldCost;
+  const referenceOrbCostPerTradeOrb = (sell2 / sell1) * referenceOrbGoldCost;
+  
+  const goldCostPerCycle = goldCostPerTradeOrb + referenceOrbCostPerTradeOrb;
+  const goldCostPerReferenceOrb = goldCostPerCycle / netReferenceOrbProfit;
 
-  return goldCost;
+  return goldCostPerReferenceOrb;
 }
 
 export function formatGoldCost(goldCost: number | null): string {
   if (goldCost === null) return 'N/A';
   
-  // Format with thousand separators
-  return goldCost.toLocaleString() + ' gold';
+  return goldCost.toLocaleString(undefined, { maximumFractionDigits: 0 });
 }
