@@ -30,8 +30,8 @@ export function Navbar() {
           </NavLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavLink className={navigationMenuTriggerStyle()} to="/about">
-            About
+          <NavLink className={navigationMenuTriggerStyle()} to="/tutorial">
+            Tutorial
           </NavLink>
         </NavigationMenuItem>
       </NavigationMenuList>

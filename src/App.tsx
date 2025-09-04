@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { Navbar } from "@/components/ui/Navbar"
-import { Home, About } from '@/pages'
+import { Home, Tutorial } from '@/pages'
 
 export default function App() {
   return (
@@ -9,7 +9,7 @@ export default function App() {
       <main className="container mx-auto mt-8">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/tutorial" element={<Tutorial />} />
         </Routes>
       </main>
     </div>
